@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Theme.MyApplication"
+        parent="Theme.MaterialComponents.Light.NoActionBar">
+    </style>
+
+    <!-- 底部导航专用样式：彻底关闭 Material 的自动处理 -->
+    <style name="MyBottomNavStyle"
+        parent="Widget.MaterialComponents.BottomNavigationView">
+
+        <!-- 不染色图标 -->
+        <item name="itemIconTint">@null</item>
+
+        <!-- 不要选中指示层 -->
+        <item name="itemActiveIndicatorStyle">@null</item>
+
+        <!-- 不要水波纹 -->
+        <item name="itemRippleColor">@null</item>
+
+    </style>
+</resources>

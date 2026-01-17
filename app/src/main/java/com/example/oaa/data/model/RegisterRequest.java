@@ -1,0 +1,33 @@
+package com.example.oaa.data.model;
+
+public class RegisterRequest {
+    private String username;
+    private String email;
+    private String code;
+
+    private String password;
+
+    public RegisterRequest(String username, String email,String code ,String password) {
+        this.username = username;
+        this.email = email;
+        this.code = code;
+        this.password = password;
+    }
+
+    // Getter 和 Setter
+    public String getUsername() { return username; }
+    public void setUsername(String username) { this.username = username; }
+
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
+
+    public String getPassword() { return password; }
+    public void setPassword(String password) { this.password = password; }
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+}
