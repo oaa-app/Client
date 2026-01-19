@@ -4,14 +4,14 @@ public class User {
     private String userid;
     private String username;
     private String email = "";
-    private String avatarUrl = "";
+    private String avatar = "";
     private String token;
 
     public User(String userid, String username, String email, String avatarUrl, String token) {
         this.userid = userid;
         this.username = username;
         this.email = email;
-        this.avatarUrl = avatarUrl;
+        this.avatar = avatarUrl;
         this.token = token;
     }
 
@@ -34,12 +34,12 @@ public class User {
         this.username = username;
     }
 
-    public String getAvatarUrl() {
-        return avatarUrl;
+    public String getAvatar() {
+        return avatar;
     }
 
-    public void setAvatarUrl(String avatarUrl) {
-        this.avatarUrl = avatarUrl;
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 
     public String getEmail() {

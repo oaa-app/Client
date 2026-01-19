@@ -1,69 +1,108 @@
 package com.example.oaa.data.repository;
 
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
+import android.content.Context;
 
 import com.example.oaa.data.model.LoginRequest;
 import com.example.oaa.data.model.LoginResponse;
+import com.example.oaa.data.model.ProfileResponse;
 import com.example.oaa.data.model.RegisterRequest;
 import com.example.oaa.data.model.RegisterResponse;
 import com.example.oaa.data.network.ApiService;
-import com.example.oaa.data.network.RetrofitClient;
-import com.example.oaa.domain.entity.User;
-import com.example.oaa.util.Resource;
+import com.example.oaa.util.RetrofitClient;
 import com.example.oaa.util.Result;
+import com.example.oaa.util.ResultCallback;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class UserRepository {
+public class UserRepository extends BaseRemoteDataSource {
 
     private final ApiService apiService;
 
-    public UserRepository() {
-        apiService = RetrofitClient.getApiService();
+    public UserRepository(Context context) {
+        this.apiService = RetrofitClient.getApiService(context);
     }
 
-    // 泛型处理 Result<T>
-    private <T> MutableLiveData<Resource<T>> handleResult(Call<Result<T>> call) {
-        MutableLiveData<Resource<T>> liveData = new MutableLiveData<>();
-        liveData.setValue(Resource.loading(null));
+    // ================== 对外业务接口 ==================
 
-        call.enqueue(new Callback<Result<T>>() {
+    public void login(LoginRequest request, ResultCallback<LoginResponse> callback) {
+        apiService.login(request).enqueue(new Callback<Result<LoginResponse>>() {
             @Override
-            public void onResponse(Call<Result<T>> call, Response<Result<T>> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    Result<T> result = response.body();
-                    if (result.getCode() == 200) {
-                        liveData.setValue(Resource.success(result.getData()));
-                    } else {
-                        liveData.setValue(Resource.error(result.getMessage(), null));
-                    }
-                } else {
-                    liveData.setValue(Resource.error("服务器返回错误", null));
-                }
+            public void onResponse(
+                    Call<Result<LoginResponse>> call,
+                    Response<Result<LoginResponse>> response
+            ) {
+                handleResponse(response, callback);
             }
 
             @Override
-            public void onFailure(Call<Result<T>> call, Throwable t) {
-                liveData.setValue(Resource.error(t.getMessage(), null));
+            public void onFailure(
+                    Call<Result<LoginResponse>> call,
+                    Throwable t
+            ) {
+                callback.onError(t.getMessage());
             }
         });
-
-        return liveData;
     }
 
+    public void register(RegisterRequest request, ResultCallback<RegisterResponse> callback) {
+        apiService.register(request).enqueue(new Callback<Result<RegisterResponse>>() {
+            @Override
+            public void onResponse(
+                    Call<Result<RegisterResponse>> call,
+                    Response<Result<RegisterResponse>> response
+            ) {
+                handleResponse(response, callback);
+            }
 
-    public LiveData<Resource<LoginResponse>> login(LoginRequest request) {
-        return handleResult(apiService.login(request));
+            @Override
+            public void onFailure(
+                    Call<Result<RegisterResponse>> call,
+                    Throwable t
+            ) {
+                callback.onError(t.getMessage());
+            }
+        });
     }
 
-    public LiveData<Resource<RegisterResponse>> register(RegisterRequest request) {
-        return handleResult(apiService.register(request));
+    public void sendCode(String email, ResultCallback<String> callback) {
+        apiService.sendCode(email).enqueue(new Callback<Result<String>>() {
+            @Override
+            public void onResponse(
+                    Call<Result<String>> call,
+                    Response<Result<String>> response
+            ) {
+                handleResponse(response, callback);
+            }
+
+            @Override
+            public void onFailure(
+                    Call<Result<String>> call,
+                    Throwable t
+            ) {
+                callback.onError(t.getMessage());
+            }
+        });
     }
 
-    public LiveData<Resource<String>> sendCode(String email) {
-        return handleResult(apiService.sendCode(email));
+    public void profile(ResultCallback<ProfileResponse> callback) {
+        apiService.profile().enqueue(new Callback<Result<ProfileResponse>>() {
+            @Override
+            public void onResponse(
+                    Call<Result<ProfileResponse>> call,
+                    Response<Result<ProfileResponse>> response
+            ) {
+                handleResponse(response, callback);
+            }
+
+            @Override
+            public void onFailure(
+                    Call<Result<ProfileResponse>> call,
+                    Throwable t
+            ) {
+                callback.onError(t.getMessage());
+            }
+        });
     }
 }

@@ -1,7 +1,5 @@
 package com.example.oaa.ui.fragment;
 
-import static org.chromium.base.ContextUtils.getApplicationContext;
-
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.view.LayoutInflater;
@@ -14,34 +12,21 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.oaa.R;
-import com.example.oaa.data.network.ApiService;
-import com.example.oaa.data.network.RetrofitClient;
 import com.example.oaa.data.repository.UserRepository;
 import com.example.oaa.domain.usecase.RegisterUseCase;
 import com.example.oaa.ui.viewmodel.RegisterViewModel;
-import com.example.oaa.util.Resource;
-import com.example.oaa.util.Result;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class RegisterFragment extends Fragment {
 
     private RegisterViewModel viewModel;
-    private final ApiService apiService;
-
-    public RegisterFragment() {
-        apiService = RetrofitClient.getApiService();
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_register, container, false);
 
-        UserRepository repository = new UserRepository();
+        UserRepository repository = new UserRepository(getContext());
         RegisterUseCase useCase = new RegisterUseCase(repository);
         viewModel = new RegisterViewModel(useCase);
 
@@ -62,27 +47,21 @@ public class RegisterFragment extends Fragment {
             }
 
             // 调用后端接口发送验证码
-            apiService.sendCode(email).enqueue(new Callback<Result<String>>() {
-                @Override
-                public void onResponse(Call<Result<String>> call, Response<Result<String>> response) {
-                    if (response.isSuccessful() && response.body() != null) {
-                        Result<String> result = response.body();
-                        if (result.getCode() == 200) {
-                            Toast.makeText(getContext(), "验证码已发送", Toast.LENGTH_SHORT).show();
-                            startCountdown(btnSendCode, 60);
-                        } else {
-                            Toast.makeText(getContext(), "发送失败：" + result.getMessage(), Toast.LENGTH_SHORT).show();
+            viewModel.sendCode(email)
+                    .observe(getViewLifecycleOwner(), resource -> {
+                        switch (resource.status) {
+                            case LOADING:
+                                Toast.makeText(getContext(), "发送中...", Toast.LENGTH_SHORT).show();
+                                break;
+                            case SUCCESS:
+                                Toast.makeText(getContext(), "验证码已发送", Toast.LENGTH_SHORT).show();
+                                startCountdown(btnSendCode, 60);
+                                break;
+                            case ERROR:
+                                Toast.makeText(getContext(), "发送失败：" + resource.message, Toast.LENGTH_SHORT).show();
+                                break;
                         }
-                    } else {
-                        Toast.makeText(getContext(), "服务器返回错误", Toast.LENGTH_SHORT).show();
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<Result<String>> call, Throwable t) {
-                    Toast.makeText(getContext(), "发送失败：" + t.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-            });
+                    });
         });
 
 

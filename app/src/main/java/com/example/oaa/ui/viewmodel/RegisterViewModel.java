@@ -21,4 +21,8 @@ public class RegisterViewModel extends ViewModel {
         RegisterRequest request = new RegisterRequest(username, email,code, password);
         return useCase.register(request);
     }
+    public LiveData<Resource<String>> sendCode(String email) {
+        return useCase.sendCode(email);
+    }
+
 }

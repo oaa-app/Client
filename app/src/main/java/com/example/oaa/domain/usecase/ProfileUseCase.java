@@ -3,27 +3,26 @@ package com.example.oaa.domain.usecase;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.example.oaa.data.model.LoginRequest;
-import com.example.oaa.data.model.LoginResponse;
+import com.example.oaa.data.model.ProfileResponse;
 import com.example.oaa.data.repository.UserRepository;
 import com.example.oaa.util.Resource;
 import com.example.oaa.util.ResultCallback;
 
-public class LoginUseCase {
+public class ProfileUseCase {
 
     private final UserRepository repository;
 
-    public LoginUseCase(UserRepository repository) {
+    public ProfileUseCase(UserRepository repository) {
         this.repository = repository;
     }
 
-    public LiveData<Resource<LoginResponse>> login(LoginRequest request) {
-        MutableLiveData<Resource<LoginResponse>> liveData = new MutableLiveData<>();
+    public LiveData<Resource<ProfileResponse>> execute() {
+        MutableLiveData<Resource<ProfileResponse>> liveData = new MutableLiveData<>();
         liveData.setValue(Resource.loading(null));
 
-        repository.login(request, new ResultCallback<LoginResponse>() {
+        repository.profile(new ResultCallback<ProfileResponse>() {
             @Override
-            public void onSuccess(LoginResponse data) {
+            public void onSuccess(ProfileResponse data) {
                 liveData.setValue(Resource.success(data));
             }
 

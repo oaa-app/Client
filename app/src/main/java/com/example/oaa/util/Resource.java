@@ -26,4 +26,16 @@ public class Resource<T> {
     public static <T> Resource<T> loading(T data) {
         return new Resource<>(Status.LOADING, null, data);
     }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public T getData() {
+        return data;
+    }
 }

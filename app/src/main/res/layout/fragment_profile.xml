@@ -67,6 +67,7 @@
                     </LinearLayout>
 
                     <ImageView
+                        android:id="@+id/iv_edit"
                         android:layout_width="24dp"
                         android:layout_height="24dp"
                         android:src="@drawable/edit" />
@@ -169,9 +170,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
-            <include layout="@layout/item_profile_menu" />
-            <include layout="@layout/item_profile_menu" />
-            <include layout="@layout/item_profile_menu" />
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_feature"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false" />
         </LinearLayout>
 
         <!-- ===== 系统区 ===== -->
@@ -193,7 +196,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
-            <include layout="@layout/item_profile_menu" />
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_system"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false" />
         </LinearLayout>
 
         <!-- ===== 退出 ===== -->

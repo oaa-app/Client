@@ -34,8 +34,8 @@ public class MainActivity extends AppCompatActivity {
             int id = item.getItemId();
             if (id == R.id.nav_home) {
                 setFragment(HomeFragment.newInstance("Android"));
-            } else if (id == R.id.nav_favorites) {
-                setFragment(HomeFragment.newInstance("Favorites"));
+            } else if (id == R.id.nav_feed) {
+                setFragment(HomeFragment.newInstance("Feed"));
             } else if (id == R.id.nav_profile) {
                 setFragment(ProfileFragment.newInstance());
                 //setFragment(HomeFragment.newInstance("Profile"));
